@@ -1,0 +1,16 @@
+# 로컬 개발용 오버라이드 — docker compose up 시 자동 적용
+# app 컨테이너는 로컬에서 직접 실행하므로 제외
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+
+  mongo:
+    ports:
+      - "27017:27017"
+
+  app:
+    # 로컬 개발 시 app 서비스 비활성화 (IntelliJ/Gradle 로컬 실행 사용)
+    profiles:
+      - production
