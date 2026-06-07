@@ -1,8 +1,36 @@
 # RelationshipLogic Backend — 작업 계획
 
-> 작성일: 2026-06-07
+> 작성일: 2026-06-07 · 최종 업데이트: 2026-06-07
 > 저장소: https://github.com/RelationshipLogic/backend.git
 > 서버: M1 맥미니 홈서버 (OrbStack Ubuntu 24.04 VM) / 도메인 미정
+> 로컬 경로: /Users/imin-u/study/rl-backend
+
+---
+
+## 진행 현황
+
+### ✅ 완료 (2026-06-07)
+- Task 1. 인프라 셋업 — docker-compose.yml, Dockerfile, GitHub Actions CD 워크플로우
+- Task 2. 프로젝트 뼈대 — Spring Boot 3.4.1 + DDD 패키지 구조 + 빈 서비스 스텁
+- Task 5. 데이터 스키마 — JPA 엔티티 4개 + MongoDB Document 2개 + 스키마 문서
+- ADR-0001 — 도메인/엔티티 분리 전략 확정
+- PR #1 오픈 중 — `feature/init-backend-skeleton` → `main`
+
+### ⏳ PR 머지 대기
+- PR #1 승인 후 main 머지 필요
+- GitHub Settings: default branch → main 변경 필요
+- GitHub Settings: `feature/backend-skeleton` 브랜치 삭제 필요
+- GitHub Settings: main 브랜치 보호 규칙 설정 필요 (PR 필수 + 승인 1명 + bypass 불가)
+
+### 🔜 다음 작업 (Phase 0 — UX 무관)
+- Task 3. AI 통합 레이어 — Anthropic SDK + Google AI SDK 의존성 추가 및 클라이언트 구현
+- Task 4. 위기 대응 가드레일 — 키워드 감지 필터 (1366, 1393 안내)
+- Task 6. 결제 연동 — 포트원 REST API 연동 (결제 요청 → 승인 → unlock 상태 저장)
+
+### 🔒 UX 확정 후 작업
+- API Controller 레이어 (interfaces/api)
+- 이미지 업로드 → Claude OCR 통합 호출
+- 심리 엔진 파이프라인 구현 (Layer 0~4)
 
 ---
 
