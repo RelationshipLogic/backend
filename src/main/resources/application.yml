@@ -15,6 +15,9 @@ spring:
   data:
     mongodb:
       uri: ${SPRING_DATA_MONGODB_URI}
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST}
+      port: ${SPRING_DATA_REDIS_PORT}
 
 ai:
   anthropic:
@@ -26,3 +29,10 @@ portone:
   api-key: ${PORTONE_API_KEY}
   api-secret: ${PORTONE_API_SECRET}
   store-id: ${PORTONE_STORE_ID}
+
+jwt:
+  secret: ${JWT_SECRET}
+
+logging:
+  file:
+    name: /app/logs/application.log
