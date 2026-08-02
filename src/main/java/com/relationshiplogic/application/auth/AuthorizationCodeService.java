@@ -3,12 +3,14 @@ package com.relationshiplogic.application.auth;
 import com.relationshiplogic.domain.auth.AuthorizationCode;
 import com.relationshiplogic.domain.auth.AuthorizationCodeRepository;
 import com.relationshiplogic.domain.support.ClockHolder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorizationCodeService {
 
     private static final Duration CODE_TTL = Duration.ofSeconds(60);
@@ -16,10 +18,6 @@ public class AuthorizationCodeService {
     private final AuthorizationCodeRepository authorizationCodeRepository;
     private final ClockHolder clockHolder;
 
-    public AuthorizationCodeService(AuthorizationCodeRepository authorizationCodeRepository, ClockHolder clockHolder) {
-        this.authorizationCodeRepository = authorizationCodeRepository;
-        this.clockHolder = clockHolder;
-    }
 
     public String issue(Long userId) {
         AuthorizationCode authorizationCode = AuthorizationCode.issue(UUID.randomUUID().toString(), userId, clockHolder.now(), CODE_TTL);
