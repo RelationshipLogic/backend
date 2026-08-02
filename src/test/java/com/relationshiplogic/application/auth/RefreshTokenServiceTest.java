@@ -31,10 +31,11 @@ class RefreshTokenServiceTest {
         String oldToken = refreshTokenService.issue(userId);
 
         // when
-        String newToken = refreshTokenService.rotate(oldToken);
+        RotatedRefreshToken rotated = refreshTokenService.rotate(oldToken);
 
         // then
-        assertThat(newToken).isNotEqualTo(oldToken);
+        assertThat(rotated.token()).isNotEqualTo(oldToken);
+        assertThat(rotated.userId()).isEqualTo(userId);
         assertThatThrownBy(() -> refreshTokenService.rotate(oldToken))
                 .isInstanceOf(IllegalArgumentException.class);
     }

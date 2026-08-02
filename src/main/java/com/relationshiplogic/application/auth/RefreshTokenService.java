@@ -30,12 +30,14 @@ public class RefreshTokenService {
 
     // 회전: oldToken이 유효하면(존재 + 미만료) 폐기하고 같은 userId로 새 토큰을 발급해 반환한다.
     // 유효하지 않으면 IllegalArgumentException을 던진다.
-    public String rotate(String oldToken) {
+    public RotatedRefreshToken rotate(String oldToken) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(oldToken).orElseThrow(IllegalArgumentException::new);
         if (refreshToken.isExpired(clockHolder.now())) {
             throw new IllegalArgumentException();
         }
         refreshTokenRepository.deleteByToken(refreshToken.getToken());
-        return issue(refreshToken.getUserId());
+        Long userId = refreshToken.getUserId();
+        String newToken = issue(userId);
+        return new RotatedRefreshToken(newToken, userId);
     }
 }
