@@ -36,7 +36,6 @@ public class AuthController {
     public AuthTokenResponse refresh(@CookieValue(REFRESH_TOKEN_COOKIE_NAME) String refreshToken, HttpServletResponse response) {
         TokenPair tokenPair = authService.refresh(refreshToken);
         setRefreshTokenCookie(response, tokenPair.refreshToken());
-
         return new AuthTokenResponse(tokenPair.accessToken());
     }
 
