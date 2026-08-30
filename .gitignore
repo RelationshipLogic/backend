@@ -1,7 +1,6 @@
 ### Gradle
 .gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
 
 ### IntelliJ IDEA
 .idea/
@@ -17,6 +16,7 @@ out/
 target/
 *.jar
 *.war
+!gradle/wrapper/gradle-wrapper.jar
 
 ### Environment
 .env
