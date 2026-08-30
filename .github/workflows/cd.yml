@@ -37,10 +37,8 @@ jobs:
       - name: Deploy to home server
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.SSH_HOST }}       # Cloudflare Tunnel SSH 호스트 또는 내부 IP
+          host: ${{ secrets.SSH_HOST }}       # Cloudflare Tunnel SSH 호스트 (맥미니)
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/rl-backend
-            docker compose pull app
-            docker compose up -d app
+            ssh rl-backend@orb 'cd ~/rl-backend && git pull && docker compose pull app && docker compose up -d app'
