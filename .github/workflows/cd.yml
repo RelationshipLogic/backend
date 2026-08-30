@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,11 +34,11 @@ jobs:
           push: true
           tags: ghcr.io/relationshiplogic/backend:latest
 
-      - name: Deploy to home server
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}       # Cloudflare Tunnel SSH 호스트 (맥미니)
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            ssh rl-backend@orb 'cd ~/rl-backend && git pull && docker compose pull app && docker compose up -d app'
+  deploy:
+    needs: build
+    runs-on: self-hosted   # 맥미니에 등록된 러너. Cloudflare Tunnel SSH 타임아웃 문제를 피하려고
+                            # GitHub 클라우드에서 인바운드로 접속하는 대신 맥미니가 직접 작업을 받아온다.
+
+    steps:
+      - name: Deploy to rl-backend VM
+        run: ssh rl-backend@orb 'cd ~/rl-backend && git pull && docker compose pull app && docker compose up -d app'
