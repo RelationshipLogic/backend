@@ -1,5 +1,6 @@
 package com.relationshiplogic.application.auth;
 
+import com.relationshiplogic.domain.auth.InvalidRefreshTokenException;
 import com.relationshiplogic.domain.auth.RefreshToken;
 import com.relationshiplogic.domain.auth.RefreshTokenRepository;
 import com.relationshiplogic.domain.support.ClockHolder;
@@ -29,11 +30,12 @@ public class RefreshTokenService {
     }
 
     // 회전: oldToken이 유효하면(존재 + 미만료) 폐기하고 같은 userId로 새 토큰을 발급해 반환한다.
-    // 유효하지 않으면 IllegalArgumentException을 던진다.
+    // 유효하지 않으면 InvalidRefreshTokenException을 던진다.
     public RotatedRefreshToken rotate(String oldToken) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(oldToken).orElseThrow(IllegalArgumentException::new);
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(oldToken)
+                .orElseThrow(InvalidRefreshTokenException::new);
         if (refreshToken.isExpired(clockHolder.now())) {
-            throw new IllegalArgumentException();
+            throw new InvalidRefreshTokenException();
         }
         refreshTokenRepository.deleteByToken(refreshToken.getToken());
         Long userId = refreshToken.getUserId();

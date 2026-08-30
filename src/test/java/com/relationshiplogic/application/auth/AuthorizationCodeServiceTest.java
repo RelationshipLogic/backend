@@ -1,6 +1,7 @@
 package com.relationshiplogic.application.auth;
 
 import com.relationshiplogic.domain.auth.FakeAuthorizationCodeRepository;
+import com.relationshiplogic.domain.auth.InvalidAuthorizationCodeException;
 import com.relationshiplogic.domain.support.FixedClockHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ class AuthorizationCodeServiceTest {
         // then
         assertThat(consumedUserId).isEqualTo(userId);
         assertThatThrownBy(() -> authorizationCodeService.consume(code))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidAuthorizationCodeException.class);
     }
 
     @Test
@@ -48,6 +49,6 @@ class AuthorizationCodeServiceTest {
 
         // when & then
         assertThatThrownBy(() -> authorizationCodeService.consume(code))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidAuthorizationCodeException.class);
     }
 }

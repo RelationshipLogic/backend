@@ -2,6 +2,7 @@ package com.relationshiplogic.application.auth;
 
 import com.relationshiplogic.domain.auth.AuthorizationCode;
 import com.relationshiplogic.domain.auth.AuthorizationCodeRepository;
+import com.relationshiplogic.domain.auth.InvalidAuthorizationCodeException;
 import com.relationshiplogic.domain.support.ClockHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,12 @@ public class AuthorizationCodeService {
     }
 
     public Long consume(String code) {
-        AuthorizationCode authorizationCode = authorizationCodeRepository.findByCode(code).orElseThrow(IllegalArgumentException::new);
+        AuthorizationCode authorizationCode = authorizationCodeRepository.findByCode(code)
+                .orElseThrow(InvalidAuthorizationCodeException::new);
         authorizationCodeRepository.deleteByCode(authorizationCode.getCode());
 
         if (authorizationCode.isExpired(clockHolder.now())) {
-            throw new IllegalArgumentException();
+            throw new InvalidAuthorizationCodeException();
         }
 
         return authorizationCode.getUserId();

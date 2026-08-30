@@ -1,6 +1,7 @@
 package com.relationshiplogic.application.auth;
 
 import com.relationshiplogic.domain.auth.FakeRefreshTokenRepository;
+import com.relationshiplogic.domain.auth.InvalidRefreshTokenException;
 import com.relationshiplogic.domain.support.FixedClockHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class RefreshTokenServiceTest {
         assertThat(rotated.token()).isNotEqualTo(oldToken);
         assertThat(rotated.userId()).isEqualTo(userId);
         assertThatThrownBy(() -> refreshTokenService.rotate(oldToken))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidRefreshTokenException.class);
     }
 
     @Test
@@ -49,6 +50,6 @@ class RefreshTokenServiceTest {
 
         // when & then
         assertThatThrownBy(() -> refreshTokenService.rotate(oldToken))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidRefreshTokenException.class);
     }
 }
