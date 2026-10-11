@@ -3,12 +3,14 @@ package com.relationshiplogic.infrastructure.config;
 import com.relationshiplogic.infrastructure.auth.CustomOAuth2UserService;
 import com.relationshiplogic.infrastructure.auth.JwtAuthenticationFilter;
 import com.relationshiplogic.infrastructure.auth.OAuth2LoginSuccessHandler;
+import com.relationshiplogic.infrastructure.auth.OAuth2RedirectTargetCaptureFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,6 +27,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final OAuth2RedirectTargetCaptureFilter oAuth2RedirectTargetCaptureFilter;
 
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
@@ -42,7 +45,8 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler(oAuth2LoginSuccessHandler)
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(oAuth2RedirectTargetCaptureFilter, OAuth2AuthorizationRequestRedirectFilter.class);
 
         return http.build();
     }
