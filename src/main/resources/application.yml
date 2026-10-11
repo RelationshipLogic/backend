@@ -60,7 +60,7 @@ spring:
 
 app:
   oauth2:
-    frontend-redirect-uri: ${OAUTH2_FRONTEND_REDIRECT_URI}
+    frontend-redirect-uris: ${OAUTH2_FRONTEND_REDIRECT_URIS}
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS}
 

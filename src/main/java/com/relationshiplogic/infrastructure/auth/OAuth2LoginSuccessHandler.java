@@ -4,7 +4,7 @@ import com.relationshiplogic.application.auth.AuthorizationCodeService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -13,16 +13,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final AuthorizationCodeService authorizationCodeService;
-
-    @Value("${app.oauth2.frontend-redirect-uri}")
-    private String frontendRedirectUri;
-
-    public OAuth2LoginSuccessHandler(AuthorizationCodeService authorizationCodeService) {
-        this.authorizationCodeService = authorizationCodeService;
-    }
+    private final FrontendRedirectResolver frontendRedirectResolver;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -30,7 +25,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         AppOAuth2User principal = (AppOAuth2User) authentication.getPrincipal();
         String code = authorizationCodeService.issue(principal.getUserId());
 
-        String redirectUri = UriComponentsBuilder.fromUriString(frontendRedirectUri)
+        String redirectUri = UriComponentsBuilder.fromUriString(frontendRedirectResolver.resolve(request))
                 .queryParam("code", code)
                 .build()
                 .toUriString();
