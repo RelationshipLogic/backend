@@ -12,6 +12,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+    mem_limit: 512m
 
   mongo:
     image: mongo:7
@@ -24,6 +26,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+    mem_limit: 768m
 
   redis:
     image: redis:7-alpine
@@ -34,11 +38,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+    mem_limit: 128m
 
   app:
     image: ghcr.io/relationshiplogic/backend:latest
     env_file:
       - .env
+    environment:
+      # Size the heap from the container limit; the default (25%) would cap the heap at ~256MB under mem_limit 1g
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60.0"
     ports:
       - "8080:8080"
     volumes:
@@ -51,6 +60,7 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
+    mem_limit: 1g
 
 volumes:
   postgres_data:
